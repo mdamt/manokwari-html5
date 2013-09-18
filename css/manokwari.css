@@ -227,3 +227,7 @@ body {
 .notification-area-invisible {
   -webkit-transform: translate3d(0, 50px, 0);
 }
+
+.hidden {
+  display: none!important;
+}
