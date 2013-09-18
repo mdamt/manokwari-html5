@@ -427,7 +427,7 @@ var setupEvents = function() {
   });
 }
 
-$(document).ready(function() {
+var initializeUi = function() {
   launcherMenu = new LauncherMenu();
   desktopArea = new DesktopArea();
   launcherButton = new LauncherButton();
@@ -442,4 +442,10 @@ $(document).ready(function() {
   clock = new Clock();
 
   setupEvents();
+}
+
+define(function() {
+  return {
+    initialize: initializeUi
+  }
 });
