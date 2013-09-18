@@ -168,6 +168,54 @@ Dimmer.prototype.tryHide = function() {
   }
 }
 
+// LogoutScreen object
+// It is the big object covering everything  
+LogoutScreen = function() {
+  this.element = $("#log-out-screen-area");
+}
+
+LogoutScreen.prototype = new BaseObject();
+
+// Hides the logout screen 
+LogoutScreen.prototype.hide = function() {
+  var self = this;
+  // Hiding means applying the logout-screen-out and eventually removing the logout-screen-fade from the menu element
+  self.element.off("webkitTransitionEnd");
+  // Do the removal after the animation ends
+  self.element.on("webkitTransitionEnd", function(event) {
+    self.element.removeClass("logout-screen-fade");
+    // Hide the element
+    self.element.css("display", "none");
+    // Detach the event handler
+    self.element.off("webkitTransitionEnd");
+  });
+  // Start the animation
+  self.element.addClass("log-out-screen-out");
+}
+// Shows the menu
+LogoutScreen.prototype.show = function() {
+  var self = this;
+  // show the element first
+  self.element.css("display", "inherit");
+  //  Showing means removing the logout-screen-out and  adding logout-screen-fade class from the element
+  setTimeout(function() {
+    self.element.removeClass("log-out-screen-out");
+    self.element.addClass("log-out-screen-fade");
+  }, 0); // invoke with setTimeout to get the element shown first
+}
+// Checks whether the logout-screen is currently open or not
+LogoutScreen.prototype.isOpen = function() {
+  // The logout-screen is open when it does not have the logout-screen-out class
+  return !this.element.hasClass("log-out-screen-out");
+}
+// Tries to hide the menu if it is open
+LogoutScreen.prototype.tryHide = function() {
+  if (this.isOpen()) {
+    // Only close the menu when it is open
+    this.hide();
+  }
+}
+
 // LockScreen object
 // It is the big object covering everything  
 LockScreen = function() {
@@ -300,7 +348,9 @@ NotificationArea.prototype.updateHeight = function() {
   // Adjust element's translate3d according to the element's height
   var myHeight = this.element.height();
   // Modify the style pointed by this.rules we got in the constructor above
-  this.rules.style.webkitTransform = "translate3d(0, " + myHeight + "px, 0)";
+  if (this.rules && this.rules.style) {
+    this.rules.style.webkitTransform = "translate3d(0, " + myHeight + "px, 0)";
+  }
 }
 
 // Removing the -invisible class will show the element
@@ -358,6 +408,7 @@ var launcherMenu,
     desktopMenu,
     dimmer,
     appletsArea,
+    logoutScreen,
     lockScreen,
     notificationArea,
     clock;
@@ -402,6 +453,14 @@ var setupEvents = function() {
     appletsArea.tryHide();
   });
 
+  $("#session-log-out").click(function() {
+    logoutScreen.show();
+  });
+
+  $("#log-out-cancel").click(function() {
+    logoutScreen.tryHide();
+  });
+
   $("#lock-screen").click(function() {
     lockScreen.show();
   });
@@ -437,6 +496,7 @@ var initializeUi = function() {
   desktopMenuButton = new DesktopMenuButton();
   dimmer = new Dimmer();
   lockScreen = new LockScreen();
+  logoutScreen = new LogoutScreen();
   appletsArea = new AppletsArea();
   notificationArea = new NotificationArea();
   clock = new Clock();
