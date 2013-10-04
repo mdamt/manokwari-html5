@@ -251,3 +251,20 @@ body {
 .hidden {
   display: none!important;
 }
+
+.toolbar-modal-center {
+
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-box-pack:center;
+  -webkit-box-align:center;
+}
+
+
+.toolbar-modal-center-inner {
+  display:-webkit-box;
+  -webkit-box-orient:horizontal;
+  -webkit-box-pack:center;
+  -webkit-box-align:center;
+
+}
