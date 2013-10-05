@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns       = "http://www.w3.org/ns/widgets"
+  id          = "in.blankon.manokwari"
+        version     = "git"
+        height      = "480"
+        width       = "800">
+ 
+  <name short="">
+    Manokwari
+  </name>
+
+  <description>
+    Manokwari
+  </description>
+
+  <author href="http://google.com/">Google</author>
+
+  <icon src="blankon-pacman.svg"/>
+  <content src="index.html"/>
+
+  <license>
+  </license>
+</widget>
