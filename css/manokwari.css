@@ -194,6 +194,20 @@ body {
   -webkit-transform: translate3d(0, -50px, 0);
 }
 
+#launched-app-icons {
+  min-height: 100px;
+  position: absolute;
+  left: 0px;
+  width: 100%;
+  top: 0px;
+  background: #eee;
+  -webkit-transition: -webkit-transform 200ms;
+}
+
+.launched-app-icons-invisible {
+  -webkit-transform: translate3d(0, -100px, 0);
+}
+
 #log-out-screen-area {
   position: absolute;
   z-index: 1000;

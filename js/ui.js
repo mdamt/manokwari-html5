@@ -265,7 +265,7 @@ LockScreen.prototype.tryHide = function() {
 }
 
 // AppletsArea object
-// This is the clock object on the right bottom of the screen
+// This is the applets area object on top of the screen
 AppletsArea = function() {
   this.element = $("#panel-applets");
 
@@ -315,6 +315,63 @@ AppletsArea.prototype.isOpen = function() {
 }
 // Tries to hide the area if it is open
 AppletsArea.prototype.tryHide = function() {
+  if (this.isOpen()) {
+    // Only close the area when it is open
+    this.hide();
+  }
+}
+
+// LaunchedAppIcons object
+// This is the applets area object on top of the screen
+LaunchedAppIcons = function() {
+  this.element = $("#launched-app-icons");
+
+  // Get the reference of launched-app-icons-invisible style from the css
+  // Because we want to modify the transition3d according to the height of the area
+  for (var i = 0; i < document.styleSheets.length; i++) {
+    // Get the sheet 
+    var sheet = document.styleSheets[i];
+    if (sheet.rules) {
+      // If there are rules in the sheet, find the .launched-app-icons-invisible rules
+      for (var j = 0; j < sheet.rules.length; j ++) {
+        if (sheet.rules[j].selectorText == ".launched-app-icons-invisible") {
+          // Keep the reference in the this.rules
+          this.rules = sheet.rules[j];
+        }
+      }
+    }
+  }
+}
+
+LaunchedAppIcons.prototype = new BaseObject();
+LaunchedAppIcons.prototype.updateHeight = function() {
+  // Adjust top coordinate according to the height of the panel
+  var panelHeight = $("#panel").height();
+  this.element.css("top", panelHeight + "px");
+
+  // Adjust element's translate3d according to the element's height
+  var myHeight = this.element.height();
+  // Modify the style pointed by this.rules we got in the constructor above
+  this.rules.style.webkitTransform = "translate3d(0, -" + myHeight + "px, 0)";
+}
+
+// Removing the -invisible class will show the element
+LaunchedAppIcons.prototype.show = function() {
+  this.updateHeight();
+  this.element.removeClass("launched-app-icons-invisible");
+}
+// Adding the -invisible class will hide the element
+LaunchedAppIcons.prototype.hide = function() {
+  this.updateHeight();
+  this.element.addClass("launched-app-icons-invisible");
+}
+// Checks whether the area is currently open or not
+LaunchedAppIcons.prototype.isOpen = function() {
+  // The area is open when it does not have the -invisible class
+  return !this.element.hasClass("launched-app-icons-invisible");
+}
+// Tries to hide the area if it is open
+LaunchedAppIcons.prototype.tryHide = function() {
   if (this.isOpen()) {
     // Only close the area when it is open
     this.hide();
@@ -404,6 +461,7 @@ var launcherMenu,
     desktopArea, 
     launcherButton, 
     launchedApps,
+    launchedAppIcons,
     trayArea,
     desktopMenu,
     dimmer,
@@ -422,12 +480,14 @@ var setupEvents = function() {
     // try to hide the desktop menu
     desktopMenu.tryHide()
     appletsArea.tryHide();
+    launchedAppIcons.tryHide();
   });
 
   dimmer.click(function() {
     launcherMenu.tryHide()
     desktopMenu.tryHide()
     appletsArea.tryHide();
+    launchedAppIcons.tryHide();
     dimmer.tryHide();
   });
 
@@ -437,6 +497,7 @@ var setupEvents = function() {
     // try to hide the launcher menu
     launcherMenu.tryHide()
     appletsArea.tryHide();
+    launchedAppIcons.tryHide();
     dimmer.show();
   });
 
@@ -451,6 +512,7 @@ var setupEvents = function() {
 
   desktopArea.click(function() {
     appletsArea.tryHide();
+    launchedAppIcons.tryHide();
   });
 
   $("#session-log-out").click(function() {
@@ -473,6 +535,13 @@ var setupEvents = function() {
     notificationArea.tryHide();
   });
 
+  $("#launched-apps").click(function() {
+    if (launchedAppIcons.isOpen()) {
+      launchedAppIcons.tryHide();
+    } else {
+      launchedAppIcons.show();
+    }
+  });
 
   // Test notifcation area
   setTimeout(function() {
@@ -498,6 +567,7 @@ var initializeUi = function() {
   lockScreen = new LockScreen();
   logoutScreen = new LogoutScreen();
   appletsArea = new AppletsArea();
+  launchedAppIcons = new LaunchedAppIcons();
   notificationArea = new NotificationArea();
   clock = new Clock();
 
