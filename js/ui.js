@@ -65,6 +65,7 @@ LauncherButton.prototype = new BaseObject();
 // It contains the icons of the currently running applications
 LaunchedApps = function () {
   this.element = $("#launched-apps");
+  this.icons = new LaunchedAppIcons();
 }
 
 LaunchedApps.prototype = new BaseObject();
@@ -461,7 +462,6 @@ var launcherMenu,
     desktopArea, 
     launcherButton, 
     launchedApps,
-    launchedAppIcons,
     trayArea,
     desktopMenu,
     dimmer,
@@ -480,14 +480,14 @@ var setupEvents = function() {
     // try to hide the desktop menu
     desktopMenu.tryHide()
     appletsArea.tryHide();
-    launchedAppIcons.tryHide();
+    launchedApps.icons.tryHide();
   });
 
   dimmer.click(function() {
     launcherMenu.tryHide()
     desktopMenu.tryHide()
     appletsArea.tryHide();
-    launchedAppIcons.tryHide();
+    launchedApps.icons.tryHide();
     dimmer.tryHide();
   });
 
@@ -497,7 +497,7 @@ var setupEvents = function() {
     // try to hide the launcher menu
     launcherMenu.tryHide()
     appletsArea.tryHide();
-    launchedAppIcons.tryHide();
+    launchedApps.icons.tryHide();
     dimmer.show();
   });
 
@@ -512,7 +512,7 @@ var setupEvents = function() {
 
   desktopArea.click(function() {
     appletsArea.tryHide();
-    launchedAppIcons.tryHide();
+    launchedApps.icons.tryHide();
   });
 
   $("#session-log-out").click(function() {
@@ -536,10 +536,10 @@ var setupEvents = function() {
   });
 
   $("#launched-apps").click(function() {
-    if (launchedAppIcons.isOpen()) {
-      launchedAppIcons.tryHide();
+    if (launchedApps.icons.isOpen()) {
+      launchedApps.icons.tryHide();
     } else {
-      launchedAppIcons.show();
+      launchedApps.icons.show();
     }
   });
 
@@ -567,7 +567,6 @@ var initializeUi = function() {
   lockScreen = new LockScreen();
   logoutScreen = new LogoutScreen();
   appletsArea = new AppletsArea();
-  launchedAppIcons = new LaunchedAppIcons();
   notificationArea = new NotificationArea();
   clock = new Clock();
 
