@@ -282,3 +282,7 @@ body {
   -webkit-box-align:center;
 
 }
+
+.template {
+  display: none!important;
+}
