@@ -56,6 +56,10 @@ body {
   height: inherit;
 }
 
+.launched-apps-icon-list {
+  margin-left: 20px;
+}
+
 #desktop {
   position: absolute;
   top: 0px;
@@ -195,17 +199,41 @@ body {
 }
 
 #launched-app-icons {
-  min-height: 100px;
+  height: 100px;
   position: absolute;
   left: 0px;
   width: 100%;
   top: 0px;
   background: #eee;
   -webkit-transition: -webkit-transform 200ms;
+  overflow: hidden;
 }
 
 .launched-app-icons-invisible {
   -webkit-transform: translate3d(0, -100px, 0);
+}
+
+.launched-app-icons-filler {
+  width: 100%;
+  height: 200px;
+  background-color: blue;
+}
+
+.launched-app-entry {
+  opacity: 0.5;
+}
+
+.launched-app-entry-highlighted {
+  opacity: 1;
+}
+
+.launched-app-entry-icon {
+  display: inline;
+  width: 32px;
+}
+
+.launched-app-entry-text {
+  font-size: 2em;
 }
 
 #log-out-screen-area {
@@ -286,3 +314,13 @@ body {
 .template {
   display: none!important;
 }
+
+.launched-apps-icon-list-entry-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.launched-apps-icon-list-entry {
+  display: inline;
+}
+

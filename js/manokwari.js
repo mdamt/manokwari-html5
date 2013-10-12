@@ -6,11 +6,13 @@ requirejs.config({
   }
 });
 
+var session, desktopScreen;
 requirejs(["jquery", "moment.min"], function($) {
-  requirejs(["ui", "manokwari/session"], function(ui, session) {
-    $(document).ready(function() {
+  $(document).ready(function() {
+    requirejs(["ui", "manokwari/session", "manokwari/screen"], function(ui, session) {
+      session = new Session();
+      desktopScreen = new Screen();
       ui.initialize();
-      var s = new Session();
 
     });
   })

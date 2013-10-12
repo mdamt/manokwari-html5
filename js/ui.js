@@ -66,9 +66,58 @@ LauncherButton.prototype = new BaseObject();
 LaunchedApps = function () {
   this.element = $("#launched-apps");
   this.icons = new LaunchedAppIcons();
+
+  // connect the window list update
+  // defer the update 
+  var self = this;
+  setTimeout(function() {
+    self.updateIconList();
+    desktopScreen.connectWindowList(function() {
+      self.updateIconList();
+    });
+  }, 1000);
 }
 
 LaunchedApps.prototype = new BaseObject();
+
+// Gets a new list of windows and update the icon list
+// accordingly
+LaunchedApps.prototype.updateIconList = function() {
+  var self = this;
+
+  // icon list
+  var container = $(".launched-apps-icon-list");
+  var template = container.find(".template");
+  var list = desktopScreen.windowList();
+  container.children(":not(.template)").remove();
+  for (var i = 0; i < list.length; i ++) {
+    var entry = template.clone();
+    entry.attr("data-id", list[i].id);
+    entry.removeClass("template");
+    container.append(entry);
+    entry.click(function() {
+      desktopScreen.activate($(this).attr("data-id"));
+    });
+  }
+  $(".launched-apps-icon-list-entry").mouseenter(function() {
+    self.icons.show($(this).attr("data-id"));
+  });
+
+  // icon and window list
+  var container = $("#launched-app-icons-container");
+  var template = container.find(".template");
+  container.children(":not(.template)").remove();
+  for (var i = 0; i < list.length; i ++) {
+    var entry = template.clone();
+    entry.attr("id", "window" + list[i].id);
+    entry.removeClass("template");
+    entry.find(".launched-app-entry-text").text(list[i].appName);
+    container.append(entry);
+    entry.mouseenter(function() {
+      self.icons.tryHide();
+    });
+  }
+}
 
 // TrayArea object
 // It is the long bar on the top right most of the screen
@@ -357,11 +406,16 @@ LaunchedAppIcons.prototype.updateHeight = function() {
 }
 
 // Removing the -invisible class will show the element
-LaunchedAppIcons.prototype.show = function() {
+LaunchedAppIcons.prototype.show = function(id) {
   this.updateHeight();
   this.element.removeClass("launched-app-icons-invisible");
+  $(".launched-app-entry-highlighted").removeClass("launched-app-entry-highlighted");
+  var highlight = $("#window" + id);
+  highlight.addClass("launched-app-entry-highlighted");
+  var top = highlight.position().top;
+  $("#launched-app-icons").scrollTop(top);
 }
-// Adding the -invisible class will hide the element
+// Adding the -invisible class will hide the 
 LaunchedAppIcons.prototype.hide = function() {
   this.updateHeight();
   this.element.addClass("launched-app-icons-invisible");
@@ -508,6 +562,7 @@ var setupEvents = function() {
     } else {
       appletsArea.show();
     }
+    launchedApps.icons.tryHide();
   });
 
   desktopArea.click(function() {
@@ -533,14 +588,6 @@ var setupEvents = function() {
 
   $("#dismiss-notification-area").click(function() {
     notificationArea.tryHide();
-  });
-
-  $("#launched-apps").click(function() {
-    if (launchedApps.icons.isOpen()) {
-      launchedApps.icons.tryHide();
-    } else {
-      launchedApps.icons.show();
-    }
   });
 
   // Test notifcation area

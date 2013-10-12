@@ -40,15 +40,24 @@
   </div>
   <div id="panel">
     <div id="launcher">L</div>
-    <div id="launched-apps">app</div>
+    <div id="launched-apps">
+      <div class="launched-apps-icon-list">
+        <div class="launched-apps-icon-list-entry template">
+          <img src="" class="launched-apps-icon-list-entry-icon">
+        </div>
+      </div>
+    </div>
     <div id="tray">tray</div>
     <div id="desktop-button">D</div>
   </div>
   <div id="launched-app-icons" class="launched-app-icons-invisible">
-    <div class="launched-app-entry template">
-      <img class="launched-app-entry-icon" src=""/>
-      <span class="launched-app-entry-text"></span>
+    <div id="launched-app-icons-container">
+      <div class="launched-app-entry template">
+        <img class="launched-app-entry-icon" src=""/>
+        <span class="launched-app-entry-text"></span>
+      </div>
     </div>
+    <div class="launched-app-icons-filler"></div>
   </div>
   <div id="panel-applets" class="panel-applets-invisible">
     applets area
