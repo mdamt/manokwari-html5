@@ -414,6 +414,7 @@ LaunchedAppIcons.prototype.show = function(id) {
   highlight.addClass("launched-app-entry-highlighted");
   var top = highlight.position().top;
   $("#launched-app-icons").scrollTop(top);
+  $("body").trigger("launched-app-icons-shown");
 }
 // Adding the -invisible class will hide the 
 LaunchedAppIcons.prototype.hide = function() {
@@ -430,6 +431,7 @@ LaunchedAppIcons.prototype.tryHide = function() {
   if (this.isOpen()) {
     // Only close the area when it is open
     this.hide();
+    $("body").trigger("launched-app-icons-hidden");
   }
 }
 
@@ -555,6 +557,10 @@ var setupEvents = function() {
     dimmer.show();
   });
 
+  $("body").on("launched-app-icons-shown", function() {
+    appletsArea.tryHide();
+    launcherMenu.tryHide()
+  });
   trayArea.click(function() {
     // Hide if it is open, otherwise just open
     if (appletsArea.isOpen()) {
