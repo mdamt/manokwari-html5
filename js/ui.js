@@ -12,11 +12,50 @@ BaseObject.prototype = {
   }
 }
 
+// Launcher menu object second level
+// it is the applications menu 
+// invoked by the LauncherMenu 
+LauncherMenuSecondLevel = function() {
+  this.element = $("#menu-second-level");
+}
+
+LauncherMenuSecondLevel.prototype = new BaseObject();
+
+// Hides the menu
+LauncherMenuSecondLevel.prototype.hide = function() {
+  // Hiding means applying the menu-invisible class to the menu element
+  this.element.addClass("menu-second-level-invisible");
+}
+// Shows the menu
+LauncherMenuSecondLevel.prototype.show = function() {
+  //  Showing means removing the menu-invisible class from the element
+  this.element.removeClass("menu-second-level-invisible");
+}
+// Checks whether the menu is currently open or not
+LauncherMenuSecondLevel.prototype.isOpen = function() {
+  // The menu is open when it does not have the menu-invisible class
+  return !this.element.hasClass("menu-second-level-invisible");
+}
+// Tries to hide the menu if it is open
+LauncherMenuSecondLevel.prototype.tryHide = function() {
+  if (this.isOpen()) {
+    // Only close the menu when it is open
+    this.hideMenu();
+  }
+}
+
 // Launcher menu object
 // it is the launcher menu on the left of the screen
 // invoked by the "launcher" button
 LauncherMenu = function() {
   this.element = $("#menu");
+  this.secondLevel = new LauncherMenuSecondLevel();
+  this.applicationEntryTemplate = $(".application-entry.template");
+  this.applicationListTemplate = $(".application-list.template");
+  this.applicationMenuContainer = $("#applications");
+  this.applicationCategoryTemplate = $(".application-category.template");
+  this.applicationSecondLevelContainer = $("#menu-second-level");
+  this.applicationContainer = {};
 }
 
 LauncherMenu.prototype = new BaseObject();
@@ -25,11 +64,13 @@ LauncherMenu.prototype = new BaseObject();
 LauncherMenu.prototype.hideMenu = function() {
   // Hiding means applying the menu-invisible class to the menu element
   this.element.addClass("menu-invisible");
+  this.secondLevel.hide();
 }
 // Shows the menu
 LauncherMenu.prototype.showMenu = function() {
   //  Showing means removing the menu-invisible class from the element
   this.element.removeClass("menu-invisible");
+  this.secondLevel.show();
 }
 // Checks whether the menu is currently open or not
 LauncherMenu.prototype.isOpen = function() {
@@ -42,6 +83,60 @@ LauncherMenu.prototype.tryHide = function() {
     // Only close the menu when it is open
     this.hideMenu();
   }
+}
+
+// Updates application menu
+LauncherMenu.prototype.updateApplicationMenu = function() {
+  var self = this;
+  this.applicationMenuContainer.children(":not(.template").remove();
+  this.applicationSecondLevelContainer.children(":not(.template)").remove();
+
+  // xdgMenu is initialized in js/manokwari.js
+  // Now we prepare the directory
+  xdgMenu.on("directory", function(data) {
+    if (data.name == "+root+") {
+      return; // don't process root
+    }
+    var template = self.applicationCategoryTemplate;
+    var entry = template.clone();
+    entry.removeClass("template");
+    entry.attr("data-id", data.id);
+    entry.find(".application-category-name").text(data.name);
+    self.applicationMenuContainer.append(entry);
+    entry.click(function() {
+      var id = $(this).attr("data-id");
+      $(".application-list").addClass("application-list-invisible");
+      var appList = $("#applications" + id);
+      appList.removeClass("application-list-invisible");
+      var pos = appList.position();
+      self.applicationSecondLevelContainer.scrollTop(pos.top);
+    });
+  });
+  // Now we append each entry to each category
+  xdgMenu.on("entry", function(data) {
+    var template = self.applicationEntryTemplate;
+    var container;
+    // Query the element not from DOM but instead from a has
+    // for performance reason
+    if (self.applicationContainer[data.parent]) {
+      container = self.applicationContainer[data.parent];
+    } else {
+      // Create new container if not exists
+      var c = self.applicationListTemplate;
+      var container = c.clone();
+      container.removeClass("template");
+      container.attr("id", "applications" + data.parent);
+      self.applicationContainer[data.parent] = container;
+      self.applicationSecondLevelContainer.append(container);
+    }
+
+    var entry = template.clone();
+    entry.removeClass("template");
+    entry.find(".application-entry-title").text(data.name);
+    container.append(entry);
+  });
+
+  xdgMenu.update(); 
 }
 
 // DesktopArea object
@@ -628,6 +723,9 @@ var initializeUi = function() {
 
 define(function() {
   return {
-    initialize: initializeUi
+    initialize: initializeUi,
+    updateMenu: function() {
+      launcherMenu.updateApplicationMenu();
+    }
   }
 });

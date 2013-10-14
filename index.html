@@ -19,7 +19,11 @@
         </div>
       </div>
       <ul id="applications" class="menu-entries">
+        <li class="application-category template">
+          <span class="application-category-name"></span>
+       </li>
       </ul>
+
       <ul id="system" class="menu-entries">
         <li id="preferences" class="clickable">Preferences...</li>
         <li id="lock-screen" class="clickable">Lock Screen</li>
@@ -27,7 +31,14 @@
         <li id="session-shut-down" class="clickable hidden">Shut Down...</li>
       </ul>
     </div>
-  </div>
+    <div id="menu-second-level" class="menu-second-level-invisible">
+      <ul class="application-list template application-list-invisible" data-category="">
+        <li class="application-entry template">
+          <img src="" class="application-entry-icon">
+          <span class="application-entry-title"></span>
+        </li>
+      </ul>
+    </div>
   <div id="desktop-menu" class="desktop-menu-invisible">
     <ul>
       <li>workspace switcher
