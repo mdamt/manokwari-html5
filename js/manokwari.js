@@ -11,6 +11,7 @@ requirejs(["jquery", "moment.min"], function($) {
   $(document).ready(function() {
     requirejs([
       "ui", 
+      "utils/base64",
       "manokwari/session", 
       "manokwari/screen",
       "manokwari/xdg-menu",

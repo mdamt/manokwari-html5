@@ -190,6 +190,8 @@ LaunchedApps.prototype.updateIconList = function() {
     var entry = template.clone();
     entry.attr("data-id", list[i].id);
     entry.removeClass("template");
+    var img = entry.find(".launched-apps-icon-list-entry-icon");
+    img.attr("src", "data:image/png;base64,"+ list[i].data);
     container.append(entry);
     entry.click(function() {
       desktopScreen.activate($(this).attr("data-id"));
@@ -208,6 +210,8 @@ LaunchedApps.prototype.updateIconList = function() {
     entry.attr("id", "window" + list[i].id);
     entry.removeClass("template");
     entry.find(".launched-app-entry-text").text(list[i].appName);
+    var img = entry.find(".launched-app-entry-icon");
+    img.attr("src", "data:image/png;base64,"+ list[i].data);
     container.append(entry);
     entry.mouseenter(function() {
       self.icons.tryHide();
