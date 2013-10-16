@@ -37,9 +37,11 @@ XdgMenu.prototype.traverse = function(root, parent) {
 
 XdgMenu.prototype.processEntry = function(entry, parent) {
   var appInfo = entry.get_app_info();
+  var icon = iconTheme.getPath(appInfo.get_icon().to_string());
   this.trigger("entry", {
     name: appInfo.get_display_name(), 
     parent: parent,
+    icon: icon,
   }); 
 }
 

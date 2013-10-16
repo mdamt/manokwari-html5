@@ -133,6 +133,7 @@ LauncherMenu.prototype.updateApplicationMenu = function() {
     var entry = template.clone();
     entry.removeClass("template");
     entry.find(".application-entry-title").text(data.name);
+    entry.find(".application-entry-icon").attr("src", "file://" + data.icon);
     container.append(entry);
   });
 
