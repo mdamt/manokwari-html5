@@ -17,6 +17,7 @@ requirejs(["jquery", "moment.min"], function($) {
       "manokwari/screen",
       "manokwari/xdg-menu",
       "manokwari/icon-theme",
+      "manokwari/mixer",
     ], function(ui, session) {
       session = new Session();
       desktopScreen = new Screen();
