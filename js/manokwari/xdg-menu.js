@@ -1,9 +1,9 @@
 XdgMenu = function(catalog) {
   this.catalog = catalog;
   GMenu = imports.gi.GMenu;
-  this.events = {}; // Holds custom events
-
 }
+
+XdgMenu.prototype = new ManokwariObject();
 
 XdgMenu.prototype.update = function() {
   var tree = new GMenu.Tree({menu_basename: this.catalog, flags: GMenu.TreeFlags.NONE}); 
@@ -55,15 +55,3 @@ XdgMenu.prototype.processDirectory = function(dir) {
   return id;
 }
 
-XdgMenu.prototype.on = function(e, f) {
-  this.events[e] = this.events[e] || []; // Gets current event list or re-init
-  this.events[e].push(f);
-}
-
-XdgMenu.prototype.trigger = function(e, p, q) {
-  if (this.events[e].length > 0) {
-    for (var i = 0; i < this.events[e].length; i ++) {
-      this.events[e][i](p, q);
-    }
-  }
-}
