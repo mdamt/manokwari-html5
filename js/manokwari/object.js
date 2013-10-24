@@ -10,7 +10,7 @@ ManokwariObject.prototype.on = function(e, f) {
 }
 
 ManokwariObject.prototype.trigger = function(e, p, q) {
-  if (this.events[e].length > 0) {
+  if (this.events[e] && this.events[e].length > 0) {
     for (var i = 0; i < this.events[e].length; i ++) {
       this.events[e][i](p, q);
     }
